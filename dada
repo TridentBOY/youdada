@@ -12,7 +12,7 @@ if not isfile("Patrick.pub") then
     makefolder("Patrick.pub")
  end
  
- local menu = game:GetObjects("rbxassetid://17156440025")[1] 
+ local menu = game:GetObjects("rbxassetid://17156509524")[1] 
  local tabholder = menu.bg.bg.bg.bg.bg.bg.main.group;
  local tabviewer = menu.bg.bg.bg.bg.bg.bg.tabbuttons;
  for _, obj in pairs(menu:GetDescendants()) do
@@ -496,7 +496,7 @@ if not isfile("Patrick.pub") then
 
                 LPH_NO_VIRTUALIZE(function()
                 function library:Tween(...) TweenService:Create(...):Play() end
-                    function library:addTab(name)
+                    function library:addTab(name,image)
                         local newTab = tabholder.tab:Clone()
                         local newButton = tabviewer.button:Clone()
 
@@ -508,26 +508,31 @@ if not isfile("Patrick.pub") then
                         newButton.Parent = tabviewer
                         newButton.Modal = true
                         newButton.Visible = true
+                        newButton.Image = image
                         newButton.text.Text = name
 
+                        for i, v in next, library.tabbuttons do
+                        v.ImageColor3 = Color3.fromRGB(25, 25, 25)
+                        end
+
                         newButton.MouseButton1Click:Connect(function()
-                            for i,v in next, library.tabs do
-                                v.Visible = v == newTab
-                            end
-                            for i,v in next, library.toInvis do
-                                v.Visible = false
-                            end
-                            for i,v in next, library.tabbuttons do
-                                local state = v == newButton
-                                if state then
-                                    v.element.Visible = true
-                                    library:Tween(v.element, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.000})
-                                    v.text.TextColor3 = Color3.fromRGB(244, 244, 244)
-                                else
-                                    library:Tween(v.element, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 1.000})
-                                    v.text.TextColor3 = Color3.fromRGB(144, 144, 144)
-                                end
-                            end
+                        for i,v in next, library.tabs do v.Visible = v == newTab end
+                        for i,v in next, library.toInvis do v.Visible = false end
+                        for i,v in next, library.tabbuttons do
+                        local state = v == newButton
+                        local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+                        local imageTweenStart = TweenService:Create(v, tweenInfo, {ImageColor3 = Color3.fromRGB(105, 100, 210)})
+                        local textTweenStart = TweenService:Create(v.text, tweenInfo, {TextColor3 = Color3.fromRGB(105, 100, 210)})
+                        local imageTweenEnd = TweenService:Create(v, tweenInfo, {ImageColor3 = Color3.fromRGB(25,25,25)})
+                        local textTweenEnd = TweenService:Create(v.text, tweenInfo, {TextColor3 = Color3.fromRGB(125, 125, 125)})
+                        if state then
+                            imageTweenStart:Play()
+                            textTweenStart:Play()
+                        else
+                            imageTweenEnd:Play()
+                            textTweenEnd:Play()
+                        end
+                        end
                         end)
 
                         local tab = {}
